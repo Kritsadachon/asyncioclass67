@@ -26,14 +26,15 @@ async def checkout_customer(queue: Queue, cashier_number: int):
             print(f"The Cashier_{cashier_number} will checkout Customer_{customer.customer_id}'s "
                   f"Product_{product.product_name} for {product.checkout_time} secs")
             await asyncio.sleep(product.checkout_time)
-        checkout_time = round(time.perf_counter() - customer_start_time, ndigits=2)
+        # checkout_time = round(time.perf_counter() - customer_start_time, ndigits=2)
+        checkout_time = product.checkout_time
         total_time += checkout_time
         print(f"The Cashier_{cashier_number} finished checkout Customer_{customer.customer_id} "
               f"in {checkout_time} secs")
         customers_served += 1
         queue.task_done()
 
-    print(f"====The Cashier_{cashier_number+1} take {customers_served} customers total {total_time} secs.")
+    print(f"====The Cashier_{cashier_number} take {customers_served} customers total {total_time*10} secs.")
 
 
 def generate_customer(customer_id: int) -> Customer:
@@ -69,7 +70,8 @@ async def main():
     await asyncio.gather(*cashiers)
 
     print(f"The supermarket process finished {num_customers} customers "
-          f"in {round(time.perf_counter() - customers_start_time, ndigits=2)} secs")
+        #   f"in {round(time.perf_counter() - customers_start_time, ndigits=2)} secs")
+        f"in {round(time.perf_counter() - customers_start_time, ndigits=2)} secs")
 
 
 if __name__ == "__main__":
